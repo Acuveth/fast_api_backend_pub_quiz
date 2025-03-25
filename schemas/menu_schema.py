@@ -39,6 +39,9 @@ class MenuItem(MenuItemBase):
     class Config:
         orm_mode = True
 
+class MenuItemResponse(MenuItem):
+    pass
+
 # Menu Category Schema
 class MenuCategoryBase(BaseModel):
     name: str

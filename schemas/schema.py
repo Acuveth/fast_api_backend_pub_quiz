@@ -155,3 +155,34 @@ class AnswerResultMessage(BaseModel):
 class LeaderboardUpdateMessage(BaseModel):
     type: str = "leaderboard_update"
     leaderboard: List[Dict[str, Any]]
+
+
+# Room schemas
+class RoomBase(BaseModel):
+    id: str
+    name: str
+    is_active: bool = True
+
+class RoomCreate(RoomBase):
+    pass
+
+class RoomResponse(RoomBase):
+    created_at: str
+    
+    class Config:
+        orm_mode = True
+
+class RoomMenuSettingBase(BaseModel):
+    room_id: str
+    show_menu: bool = True
+    menu_id: Optional[int] = None
+    menu_description: Optional[str] = None
+
+class RoomMenuSettingCreate(RoomMenuSettingBase):
+    pass
+
+class RoomMenuSettingResponse(RoomMenuSettingBase):
+    created_at: str
+    
+    class Config:
+        orm_mode = True

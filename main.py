@@ -9,6 +9,8 @@ from api.routes.auth import router as auth_router
 from api.routes.websocket import router as websocket_router
 from api.routes.menu import router as menu_router
 from api.routes.question import router as question_router
+from api.routes.room import router as room_router
+
 # Create tables if they don't exist
 BaseModels.metadata.create_all(bind=engine)
 BaseMenuModels.metadata.create_all(bind=engine)
@@ -36,7 +38,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth_router)
 app.include_router(websocket_router)
 app.include_router(menu_router)
-app.include_router(question_router) 
+app.include_router(question_router)
+app.include_router(room_router)
 
 @app.get("/")
 async def root():

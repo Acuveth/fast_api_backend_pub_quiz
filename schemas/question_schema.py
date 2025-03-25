@@ -15,6 +15,12 @@ class QuestionOption(QuestionOptionBase):
     class Config:
         orm_mode = True
 
+class OptionResponse(QuestionOption):
+    pass
+
+class OptionBulkRequest(BaseModel):
+    options: List[QuestionOptionCreate]
+
 class QuestionBase(BaseModel):
     room_id: str
     text: str

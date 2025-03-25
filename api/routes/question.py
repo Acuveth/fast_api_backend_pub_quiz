@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from db.database import get_db
-from schemas.question_schema import Question, QuestionCreate
+from schemas.question_schema import Question, QuestionCreate, QuestionOption, OptionResponse, OptionBulkRequest
 from services.question_service import QuestionService
 
 router = APIRouter(
@@ -84,3 +84,40 @@ async def deactivate_question(question_id: int, db: Session = Depends(get_db)):
     if updated_question is None:
         raise HTTPException(status_code=404, detail="Question not found")
     return updated_question
+
+@router.post("/options/bulk/{question_id}", response_model=List[OptionResponse])
+async def bulk_create_or_update_options(question_id: int, request: OptionBulkRequest, db: Session = Depends(get_db)):
+    """
+    Create or update multiple options for a question at once.
+    """
+    from db.models import Question as QuestionModel, QuestionOption
+    
+    # Check if the question exists and is multiple choice
+    question = db.query(QuestionModel).filter(QuestionModel.id == question_id).first()
+    if not question:
+        raise HTTPException(status_code=404, detail="Question not found")
+    
+    if question.question_type != "MULTIPLE_CHOICE":
+        raise HTTPException(status_code=400, detail="Options can only be added to multiple choice questions")
+    
+    # Delete existing options
+    db.query(QuestionOption).filter(QuestionOption.question_id == question_id).delete()
+    
+    # Create new options
+    db_options = []
+    for option_data in request.options:
+        db_option = QuestionOption(
+            question_id=question_id,
+            option_letter=option_data.option_letter,
+            option_text=option_data.option_text
+        )
+        db.add(db_option)
+        db_options.append(db_option)
+    
+    db.commit()
+    
+    # Refresh all options to get their IDs
+    for db_option in db_options:
+        db.refresh(db_option)
+    
+    return db_options
