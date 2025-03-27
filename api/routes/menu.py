@@ -11,7 +11,7 @@ from schemas.menu_schema import (
     MenuItemOption as MenuItemOptionSchema,
     MenuItemCreate,
     MenuCategoryCreate,
-    MenuOptionCreate,
+    MenuItemOptionCreate,
     MenuResponse,
     RoomMenuSettings as RoomMenuSettingsSchema,
     RoomMenuSettingsCreate
@@ -154,7 +154,7 @@ async def read_option(option_id: int, db: Session = Depends(get_db)):
     return option
 
 @router.post("/items/{item_id}/options", response_model=MenuItemOptionSchema, status_code=status.HTTP_201_CREATED)
-async def create_option(item_id: int, option: MenuOptionCreate, db: Session = Depends(get_db)):
+async def create_option(item_id: int, option: MenuItemOptionCreate, db: Session = Depends(get_db)):
     try:
         return await MenuService.create_option(db=db, item_id=item_id, option=option)
     except Exception as e:

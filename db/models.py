@@ -17,16 +17,6 @@ class Room(Base):
     settings = relationship("RoomSettings", back_populates="room", uselist=False)
     menu_settings = relationship("RoomMenuSetting", back_populates="room", uselist=False)
 
-class RoomMenuSetting(Base):
-    __tablename__ = "room_menu_settings"
-    
-    room_id = Column(String, ForeignKey("rooms.id"), primary_key=True)
-    show_menu = Column(Boolean, default=True)
-    menu_id = Column(Integer, nullable=True)
-    menu_description = Column(Text, nullable=True)
-    created_at = Column(String)
-    
-    room = relationship("Room", back_populates="menu_settings")
 
 class Team(Base):
     __tablename__ = "teams"

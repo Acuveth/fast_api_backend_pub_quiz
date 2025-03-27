@@ -43,9 +43,11 @@ class MenuItemOption(Base):
 
 class RoomMenuSettings(Base):
     __tablename__ = "room_menu_settings"
+    __table_args__ = {'extend_existing': True}  # Add this line
     
     room_id = Column(String, ForeignKey("rooms.id"), primary_key=True)
     show_menu = Column(Boolean, default=True)
+    menu_id = Column(Integer, nullable=True)
     menu_description = Column(Text, nullable=True)
     created_at = Column(String)
     

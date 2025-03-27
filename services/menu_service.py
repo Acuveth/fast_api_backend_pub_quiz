@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
 from db.models_menu import MenuCategory, MenuItem, MenuItemOption, RoomMenuSettings
 from schemas.menu_schema import (
-    MenuCategoryCreate, MenuItemCreate, MenuOptionCreate, 
+    MenuCategoryCreate, MenuItemCreate, MenuItemOptionCreate, 
     RoomMenuSettingsCreate, MenuResponse
 )
 from datetime import datetime
@@ -175,7 +175,7 @@ class MenuService:
         return db.query(MenuItemOption).filter(MenuItemOption.id == option_id).first()
 
     @staticmethod
-    async def create_option(db: Session, item_id: int, option: MenuOptionCreate):
+    async def create_option(db: Session, item_id: int, option: MenuItemOptionCreate):
         current_time = datetime.utcnow().isoformat()
         db_option = MenuItemOption(
             menu_item_id=item_id,
